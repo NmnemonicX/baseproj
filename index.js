@@ -1,5 +1,7 @@
 const express  = require('express');
 const cors = require('cors');
+const formData = require("express-form-data");
+
 
 const {Book}=require('./models');
 
@@ -28,11 +30,11 @@ const BOOKS = [
     }
 ]
 
-stor.book.push(BOOKS)
+stor.book.push(...BOOKS)
 
 const app = express();
-
-app.use(cors())
+app.use(formData.parse());
+app.use(cors());
 
 app.post('/api/user/login', (req, res) =>
 {
@@ -41,19 +43,22 @@ app.post('/api/user/login', (req, res) =>
 });
 
 app.get('/api/books', (req, res) => {
-    const {book} = stor.book;
+    console.log(stor)
+    const {book} = stor;
+    console.log(book)
     res.json(book);
 });
 app.get('/api/books/:id', (req, res) => {
     const {book} = stor;
     const {id} = req.params;
-    console.log('book',book)
-    console.log('id',id)
-    const idx = book.find(el => el.id === "1")   ///findIndex(el => el.id === "1");
-    console.log('idx',idx)
+    // console.log('book',book)
+    // console.log('id',id)
+
+    const idx = book.findIndex(el => el.id === id);
+    // console.log('idx',idx)
 
     if (idx !== null) {
-        res.json(idx);
+        res.json(book[idx]);
     } else {
         res.status(404);
         res.json("book | not found");
@@ -67,29 +72,27 @@ app.post('/api/books', (req, res) => {
         favorite,
         fileCover,
         fileName  } = req.body;
-
-    const newBook = new Book(title,
-        description,
-        authors,
-        favorite,
-        fileCover,
-        fileName );
+// console.log(req.body);
+    const newBook = new Book( undefined , title , description,authors,favorite, fileCover, fileName );
+    // console.log(newBook)
     book.push(newBook);
-
     res.status(201);
     res.json(newBook);
 });
 app.put('/api/books/:id', (req, res) => {
     const {book} = stor;
-    const {title,description,authors,favorite,fileCover, fileName  } = req.body;
+    const {title,description,authors,favorite,fileCover,fileName  } = req.body;
     const {id} = req.params;
     const idx = book.findIndex(el => el.id === id);
-
+    // console.log('title',title)
+    // console.log(idx)
     if (idx !== -1) {
+        // console.log(book[idx])
         book[idx] = {
             ...book[idx],
             title,description,authors,favorite,fileCover, fileName
         };
+        // console.log(book[idx])
         res.json(book[idx]);
     } else {
         res.status(404);
