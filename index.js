@@ -13,8 +13,8 @@ const bookRoute = require('./routes/book');
 
 const app = express();
 
-app.use(formData.parse());
-//app.use(bodyParser());
+//app.use(formData.parse());  //не работает совместно с multer
+app.use(bodyParser());
 // app.use(bodyParser.urlencoded());
 // app.use(bodyParser.json());
 // app.use(bodyParser.text());

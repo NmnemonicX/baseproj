@@ -2,6 +2,7 @@ const express = require('express');
 const {Book} = require("../models");
 const router = express.Router();
 const fileMiddleware = require('../midleware/file');
+const path = require('path')
 
 
 
@@ -106,11 +107,26 @@ router.delete('/:id', (req, res) => {
 
 
 
-router.post('/upload-book', fileMiddleware.single('fileBook'), (req, res) => {
+router.post('/upload-book/:id', fileMiddleware.single('fileBook'), (req, res) => {
     if (req.file) {
         const {path} = req.file;
         console.log(path);
-        res.json(path);
+        const {book} = stor;
+
+        const {id} = req.params;
+        const idx = book.findIndex(el => el.id === id);
+        const fileBook = path
+        if (idx !== -1) {
+            book[idx] = {
+                ...book[idx],
+                fileBook
+            };
+            res.json(book[idx]);
+        } else {
+            res.status(404);
+            res.json("book | not found");
+        }
+     //   res.json(path);
     } else {
         res.json(null);
     }
@@ -118,7 +134,16 @@ router.post('/upload-book', fileMiddleware.single('fileBook'), (req, res) => {
 
 
 router.get('/:id/download-img', (req, res) => {
-    res.download(__dirname+'/../public/book/testDoc.doc-1640630880187', 'testDoc.doc', err=>{
+    const {book} = stor;
+    const {id} = req.params;
+    const idx = book.findIndex(el => el.id === id);
+
+    const pathfile =  book[idx].fileBook
+    const name =  path.basename(pathfile)
+
+
+    res.download(__dirname+'/../'+pathfile, name, err=>{
+   // res.download(__dirname+'/../public/book/testDoc.doc-1640630880187', 'testDoc.doc', err=>{
         if (err){
             res.status(404).json();
         }
