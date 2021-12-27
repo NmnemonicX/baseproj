@@ -1,6 +1,7 @@
 const express  = require('express');
 const cors = require('cors');
 const formData = require("express-form-data");
+const bodyParser = require("body-parser");
 
 const loggerMiddleware = require('./midleware/logger');
 const errorMiddleware = require('./midleware/error');
@@ -13,7 +14,13 @@ const bookRoute = require('./routes/book');
 const app = express();
 
 app.use(formData.parse());
+//app.use(bodyParser());
+// app.use(bodyParser.urlencoded());
+// app.use(bodyParser.json());
+// app.use(bodyParser.text());
+
 app.use(cors());
+
 app.use(loggerMiddleware);
 
 

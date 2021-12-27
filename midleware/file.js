@@ -5,21 +5,17 @@ const storage = multer.diskStorage({
         cb(null, 'public/book')
     },
     filename(req, file, cb) {
-        cb(null, `${new Date().toISOString().replace(/:/g, '-')}-${file.originalname}`)
+        cb(null, file.originalname +'-'+Date.now() )
     }
 });
 
-const allowedTypes = [ 'application/msword','application/pdf', 'application/json', 'image/jpeg','text/plain'];
+const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg','application/pdf','application/msword'];
 
 const fileFilter = (req, file, cb) => {
-   // if (allowedTypes.includes(file.mimetype)) {
-    console.log(req);
-    if (1==1) {
+    if (allowedTypes.includes(file.mimetype)) {
         cb(null, true)
-        console.log('true-load');
     } else {
         cb(null, false)
-        console.log('false-load');
     }
 };
 

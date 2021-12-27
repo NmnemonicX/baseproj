@@ -12,7 +12,7 @@ class Book
     favorite="",
     fileCover="",
     fileName="",
-    fileBook= "string"
+    fileBook= ""
     )
     {       this.id=id,
             this.title=title,

@@ -17,7 +17,8 @@ const BOOKS = [
         authors: "i am",
         favorite: "what",
         fileCover: "Cover",
-        fileName: "win1.doc"
+        fileName: "win1.doc",
+        fileBook:""
     },
     {
         id: "2",
@@ -26,7 +27,9 @@ const BOOKS = [
         authors: "and me",
         favorite: "aaa",
         fileCover: "Cover2",
-        fileName: "lnx.doc"
+        fileName: "lnx.doc",
+        fileBook:""
+
     }
 ]
 
@@ -103,17 +106,23 @@ router.delete('/:id', (req, res) => {
 
 
 
-router.post('/upload-file',
-    fileMiddleware.single('fileBook'),
-    (req, res) => {
+router.post('/upload-book', fileMiddleware.single('fileBook'), (req, res) => {
     if (req.file) {
         const {path} = req.file;
         console.log(path);
-
         res.json(path);
     } else {
         res.json(null);
     }
+});
+
+
+router.get('/:id/download-img', (req, res) => {
+    res.download(__dirname+'/../public/book/testDoc.doc-1640630880187', 'testDoc.doc', err=>{
+        if (err){
+            res.status(404).json();
+        }
+    });
 });
 
 
