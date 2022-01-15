@@ -47,18 +47,6 @@ router.get('/', (req, res) => {
     });
 });
 
-// router.get('/:id', (req, res) => {
-//     const {book} = stor;
-//     const {id} = req.params;
-//     const idx = book.findIndex(el => el.id === id);
-//
-//     if (idx !== null) {
-//         res.json(book[idx]);
-//     } else {
-//         res.status(404);
-//         res.json("book | not found");
-//     }
-// });
 
 
 router.get('/create', (req, res) => {
@@ -68,20 +56,6 @@ router.get('/create', (req, res) => {
     });
 });
 
-// router.post('/', (req, res) => {
-//     const {book} = stor;
-//     const {title,
-//         description,
-//         authors,
-//         favorite,
-//         fileCover,
-//         fileName  } = req.body;
-//     const newBook = new Book( undefined , title , description,authors,favorite, fileCover, fileName );
-//
-//     book.push(newBook);
-//     res.status(201);
-//     res.json(newBook);
-// });
 
 
 router.post('/create', (req, res) => {
@@ -114,23 +88,6 @@ router.get('/:id', (req, res) => {
 });
 
 
-// router.put('/:id', (req, res) => {
-//     const {book} = stor;
-//     const {title,description,authors,favorite,fileCover,fileName  } = req.body;
-//     const {id} = req.params;
-//     const idx = book.findIndex(el => el.id === id);
-//
-//     if (idx !== -1) {
-//         book[idx] = {
-//             ...book[idx],
-//             title,description,authors,favorite,fileCover, fileName
-//         };
-//         res.json(book[idx]);
-//     } else {
-//         res.status(404);
-//         res.json("book | not found");
-//     }
-// });
 
 router.get('/update/:id', (req, res) => {
     const {book} = stor;
@@ -165,22 +122,6 @@ router.post('/update/:id', (req, res) => {
 });
 
 
-
-// router.delete('/:id', (req, res) => {
-//     const {book} = stor;
-//     const {id} = req.params;
-//     const idx = book.findIndex(el => el.id === id);
-//
-//     if (idx !== -1) {
-//         book.splice(idx, 1);
-//         res.json(true);
-//     } else {
-//         res.status(404);
-//         res.json("book | not found");
-//     }
-//
-//
-// });
 
 router.post('/delete/:id', (req, res) => {
     const {book} = stor;
