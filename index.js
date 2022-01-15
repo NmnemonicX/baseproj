@@ -7,9 +7,9 @@ const loggerMiddleware = require('./midleware/logger');
 const errorMiddleware  = require('./midleware/error');
 
 const indexRoute = require('./routes/index');
-const userRoute = require('./routes/user');
+const userApiRoute = require('./routes/api/user');
 const bookRoute = require('./routes/book');
-
+const bookApiRoute = require('./routes/api/book');
 
 const app = express();
 //app.use(formData.parse());  //не работает совместно с multer
@@ -26,8 +26,8 @@ app.use('/', indexRoute);
 
 app.use('/books/',bookRoute);
 
-app.use('/api/user/',userRoute);
-app.use('/api/books/',bookRoute);
+app.use('/api/user/',userApiRoute);
+app.use('/api/books/',bookApiRoute);
 
 app.use(errorMiddleware);
 
