@@ -9,6 +9,7 @@
         <thead>
         <tr>
             <th scope="col">#</th>
+             <th scope="col">cчетчик</th>
             <th scope="col">Заголовок</th>
             <th scope="col"></th>
         </tr>
@@ -17,6 +18,7 @@
         <% books.map((el, idx) => { %>
             <tr>
                 <th scope="row"><%= idx + 1 %></th>
+                <td><%= el.counter %></td>
                 <td><%= el.title %></td>
                 <td class="text-right">
                     <a class="btn btn-sm btn-success" href="/books/<%= el.id %>">
@@ -28,6 +30,11 @@
                     <form action="/books/delete/<%= el.id %>" method="POST" class="d-inline">
                         <button class="btn btn-sm btn-danger">
                             <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    <form action="/books/counter/<%= el.id %>/incr" method="POST" class="d-inline">
+                        <button class="btn btn-sm btn-danger">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
                     </form>
                 </td>

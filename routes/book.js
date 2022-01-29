@@ -3,8 +3,13 @@ const {Book} = require("../models");
 const router = express.Router();
 const fileMiddleware = require('../midleware/file');
 const path = require('path')
+const redis = require("redis");
 
 
+//const clientRed = redis.createClient({ url:`redis://${REDIS_URL}`})
+const clientRed = redis.createClient({ url:`redis://storage`})
+//const client = redis.createClient({    host: REDIS_URL        })
+clientRed.connect()
 
 const stor = {
     book:[],
@@ -19,7 +24,8 @@ const BOOKS = [
         favorite: "what",
         fileCover: "Cover",
         fileName: "win1.doc",
-        fileBook:""
+        fileBook:"",
+        counter:""
     },
     {
         id: "2",
@@ -29,7 +35,8 @@ const BOOKS = [
         favorite: "aaa",
         fileCover: "Cover2",
         fileName: "lnx.doc",
-        fileBook:""
+        fileBook:"",
+        counter:"0"
 
     }
 ]
@@ -38,8 +45,15 @@ stor.book.push(...BOOKS)
 
 
 
-router.get('/', (req, res) => {
+router.get('/', async(req, res) => {
     const {book} = stor;
+
+    for (const item of book) {
+        const counter = await clientRed.get(item.id)
+        console.log('counter ',counter)
+        item.counter=counter;
+    }
+
 
     res.render("book/index", {
         title: "Book",
@@ -76,6 +90,7 @@ router.get('/:id', (req, res) => {
     const {book} = stor;
     const {id} = req.params;
     const idx = book.findIndex(el => el.id === id);
+
 
     if (idx !== -1) {
         res.render("book/view", {
@@ -121,6 +136,18 @@ router.post('/update/:id', (req, res) => {
     }
 });
 
+router.post('/counter/:id/incr',async (req, res) => {
+    const {book} = stor;
+    const {id} = req.params;
+    const idx = book.findIndex(el => el.id === id);
+    const x= await clientRed.incr(id)
+    console.log(`id= ${id} и counter = ${x}`)
+     if (idx !== -1) {
+         res.redirect(`/books`);
+    } else {
+         res.status(404).redirect('/404');
+     }
+});
 
 
 router.post('/delete/:id', (req, res) => {

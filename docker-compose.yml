@@ -1,0 +1,23 @@
+version: '2.3'
+
+services:
+  storage:
+    image: redis
+    volumes:
+      - logs_data:/var/log
+  books:
+    build: .
+    ports:
+      - 80:3000
+    environment:
+      - PORT=3000
+      - REDIS_URL=storage
+    links:
+      - storage
+    depends_on:
+      - storage
+
+volumes:
+  logs_data: {}
+
+

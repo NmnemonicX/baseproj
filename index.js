@@ -10,8 +10,11 @@ const indexRoute = require('./routes/index');
 const userApiRoute = require('./routes/api/user');
 const bookRoute = require('./routes/book');
 const bookApiRoute = require('./routes/api/book');
+const redis = require('redis');
+
 
 const app = express();
+
 //app.use(formData.parse());  //не работает совместно с multer
 app.use(bodyParser());
 // app.use(bodyParser.urlencoded());
@@ -38,6 +41,7 @@ app.use(errorMiddleware);
 // })
 
 const PORT = process.env.PORT||3000;
+const REDIS_URL = process.env.REDIS_URL ||'localhost';
 app.listen(PORT,()=>{
     console.log(` server run in port= ${PORT} `)
     }
