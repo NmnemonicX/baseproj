@@ -3,13 +3,12 @@ const {Book} = require("../models");
 const router = express.Router();
 const fileMiddleware = require('../midleware/file');
 const path = require('path')
-const redis = require("redis");
 
+const axios = require('axios');
 
-//const clientRed = redis.createClient({ url:`redis://${REDIS_URL}`})
-const clientRed = redis.createClient({ url:`redis://storage`})
-//const client = redis.createClient({    host: REDIS_URL        })
-clientRed.connect()
+// const clientRed = redis.createClient({ url:`redis://storage`})
+
+// clientRed.connect()
 
 const stor = {
     book:[],
@@ -25,7 +24,7 @@ const BOOKS = [
         fileCover: "Cover",
         fileName: "win1.doc",
         fileBook:"",
-        counter:""
+        counter:"1"
     },
     {
         id: "2",
@@ -43,18 +42,38 @@ const BOOKS = [
 
 stor.book.push(...BOOKS)
 
+async function initBook() {
+    for (const item of stor.book) {
+        await axios.get(`http://app_counter:5000/counter/${item.id}`).then(resp => {
+
+            console.log('resp.data', resp.data);
+            item.counter = resp.data;
+
+        });
+
+    }
+}
+
+initBook()
 
 
-router.get('/', async(req, res) => {
+router.get('/', async (req, res) => {
     const {book} = stor;
 
     for (const item of book) {
-        const counter = await clientRed.get(item.id)
-        console.log('counter ',counter)
-        item.counter=counter;
+      //  const counter = await clientRed.get(item.id)
+        console.log(`http://localhost:5000/counter/${item.id}`)
+
+         await axios.get(`http://app_counter:5000/counter/${item.id}`).then(resp => {
+            console.log('resp.data',resp.data);
+            item.counter=resp.data;
+        });
+
+        console.log('item.counter = ',item.counter)
+
     }
 
-
+    console.log('вызываю отрисовку')
     res.render("book/index", {
         title: "Book",
         books: book,
@@ -139,9 +158,13 @@ router.post('/update/:id', (req, res) => {
 router.post('/counter/:id/incr',async (req, res) => {
     const {book} = stor;
     const {id} = req.params;
-    const idx = book.findIndex(el => el.id === id);
-    const x= await clientRed.incr(id)
-    console.log(`id= ${id} и counter = ${x}`)
+    console.log(`вошли request /counter/:${id}/incr`)
+      const idx = book.findIndex(el => el.id === id);
+
+    await axios.post(`http://app_counter:5000/counter/${id}/incr`).then(resp => {  console.log(`id incr= ${id} и counter = ${resp.data}`)   });
+
+
+    console.log(`вышли из request`)
      if (idx !== -1) {
          res.redirect(`/books`);
     } else {

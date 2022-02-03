@@ -10,7 +10,6 @@ const indexRoute = require('./routes/index');
 const userApiRoute = require('./routes/api/user');
 const bookRoute = require('./routes/book');
 const bookApiRoute = require('./routes/api/book');
-const redis = require('redis');
 
 
 const app = express();
