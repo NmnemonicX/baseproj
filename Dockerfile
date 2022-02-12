@@ -1,7 +1,7 @@
-FROM node
+FROM node:16.5.0-alpine
 WORKDIR /app
 
-COPY ./package*.json ./
+COPY package*.json ./
 RUN npm install
 COPY *.js ./
 COPY midleware/ ./midleware/

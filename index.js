@@ -2,6 +2,8 @@ const express  = require('express');
 const cors = require('cors');
 const formData = require("express-form-data");
 const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
+
 
 const loggerMiddleware = require('./midleware/logger');
 const errorMiddleware  = require('./midleware/error');
@@ -40,9 +42,35 @@ app.use(errorMiddleware);
 // })
 
 const PORT = process.env.PORT||3000;
-const REDIS_URL = process.env.REDIS_URL ||'localhost';
-app.listen(PORT,()=>{
-    console.log(` server run in port= ${PORT} `)
+const UserDB = process.env.DB_USERNAME || 'root';
+const PasswordDB = process.env.DB_PASSWORD || '12345';
+const NameDB = process.env.DB_NAME || 'books_database';
+const HostDB = process.env.DB_HOST || 'mongodb://localhost:27017/';
+
+async function start() {
+    try {
+        await mongoose.connect(HostDB, {
+            user: UserDB,
+            pass: PasswordDB,
+            dbName: NameDB,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+
+        // начинаем прослушивать подключения на 3000 порту
+        app.listen(PORT, () => {
+            console.log(`Server is running, go to http://localhost:${PORT}/`)
+        });
+    } catch (e) {
+        console.log(e);
     }
-);
+}
+start();
+
+
+//
+// app.listen(PORT,()=>{
+//     console.log(` server run in port= ${PORT} `)
+//     }
+// );
 
