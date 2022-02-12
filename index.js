@@ -4,7 +4,6 @@ const formData = require("express-form-data");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
-
 const loggerMiddleware = require('./midleware/logger');
 const errorMiddleware  = require('./midleware/error');
 
@@ -18,9 +17,7 @@ const app = express();
 
 //app.use(formData.parse());  //не работает совместно с multer
 app.use(bodyParser());
-// app.use(bodyParser.urlencoded());
-// app.use(bodyParser.json());
-// app.use(bodyParser.text());
+
 app.set('view engine', 'ejs');
 app.use(cors());
 app.use(loggerMiddleware);
@@ -30,8 +27,8 @@ app.use('/', indexRoute);
 
 app.use('/books/',bookRoute);
 
-app.use('/api/user/',userApiRoute);
-app.use('/api/books/',bookApiRoute);
+ app.use('/api/user/',userApiRoute);
+// app.use('/api/books/',bookApiRoute); //пока не нужно
 
 app.use(errorMiddleware);
 
@@ -57,7 +54,7 @@ async function start() {
             useUnifiedTopology: true,
         });
 
-        // начинаем прослушивать подключения на 3000 порту
+
         app.listen(PORT, () => {
             console.log(`Server is running, go to http://localhost:${PORT}/`)
         });
@@ -68,9 +65,4 @@ async function start() {
 start();
 
 
-//
-// app.listen(PORT,()=>{
-//     console.log(` server run in port= ${PORT} `)
-//     }
-// );
 
